@@ -6,7 +6,9 @@ repositories{
 }
 
 dependencies {
-    compile(name:'barcodescanner-release-2.1.5', ext:'aar')
+//    compile(name:'barcodescanner-release-2.1.5', ext:'aar')
+    implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
 }
 
 android {

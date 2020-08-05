@@ -28,6 +28,7 @@ public class CustomScannerActivity extends Activity {
     private DecoratedBarcodeView barcodeScannerView;
     private Button switchFlashlightButton;
     private ViewfinderView viewfinderView;
+    Textview placeholder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,10 @@ public class CustomScannerActivity extends Activity {
         capture = new CaptureManager(this, barcodeScannerView);
         capture.initializeFromIntent(getIntent(), savedInstanceState);
         capture.decode();
+
+        if(getIntent().hasExtra(Intents.Scan.PROMPT_MESSAGE)){
+            placeholder.setText(getIntent().getStringExtra(Intents.Scan.PROMPT_MESSAGE));
+        }
 
         changeMaskColor(null);
         changeLaserVisibility(false);

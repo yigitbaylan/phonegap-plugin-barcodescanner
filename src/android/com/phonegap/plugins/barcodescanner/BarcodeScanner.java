@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.content.pm.PackageManager;
@@ -35,29 +36,6 @@ import com.journeyapps.barcodescanner.CaptureActivity;
  */
 public class BarcodeScanner extends CordovaPlugin {
     public static final int REQUEST_CODE = 0x0ba7c;
-
-    private static final String SCAN = "scan";
-    private static final String ENCODE = "encode";
-    private static final String CANCELLED = "cancelled";
-    private static final String FORMAT = "format";
-    private static final String TEXT = "text";
-    private static final String DATA = "data";
-    private static final String TYPE = "type";
-    private static final String PREFER_FRONTCAMERA = "preferFrontCamera";
-    private static final String ORIENTATION = "orientation";
-    private static final String SHOW_FLIP_CAMERA_BUTTON = "showFlipCameraButton";
-    private static final String RESULTDISPLAY_DURATION = "resultDisplayDuration";
-    private static final String SHOW_TORCH_BUTTON = "showTorchButton";
-    private static final String TORCH_ON = "torchOn";
-    private static final String SAVE_HISTORY = "saveHistory";
-    private static final String DISABLE_BEEP = "disableSuccessBeep";
-    private static final String FORMATS = "formats";
-    private static final String PROMPT = "prompt";
-    private static final String TEXT_TYPE = "TEXT_TYPE";
-    private static final String EMAIL_TYPE = "EMAIL_TYPE";
-    private static final String PHONE_TYPE = "PHONE_TYPE";
-    private static final String SMS_TYPE = "SMS_TYPE";
-
     private static final String LOG_TAG = "BarcodeScanner";
 
     private String [] permissions = { Manifest.permission.CAMERA };
@@ -92,15 +70,15 @@ public class BarcodeScanner extends CordovaPlugin {
         this.callbackContext = callbackContext;
         this.requestArgs = args;
 
-        if (action.equals(ENCODE)) {
+        if (action.equals(Options.ENCODE)) {
             JSONObject obj = args.optJSONObject(0);
             if (obj != null) {
-                String type = obj.optString(TYPE);
-                String data = obj.optString(DATA);
+                String type = obj.optString(Options.TYPE);
+                String data = obj.optString(Options.DATA);
 
                 // If the type is null then force the type to text
                 if (type == null) {
-                    type = TEXT_TYPE;
+                    type = Options.TEXT_TYPE;
                 }
 
                 if (data == null) {
@@ -113,7 +91,7 @@ public class BarcodeScanner extends CordovaPlugin {
                 callbackContext.error("User did not specify data to encode");
                 return true;
             }
-        } else if (action.equals(SCAN)) {
+        } else if (action.equals(Options.SCAN)) {
 
             //android permission auto add
             if(!hasPermisssion()) {
@@ -175,24 +153,53 @@ public class BarcodeScanner extends CordovaPlugin {
                             }
                         }
 
-                        intentScan.putExtra(Intents.Scan.CAMERA_ID, obj.optBoolean(PREFER_FRONTCAMERA, false) ? 1 : 0);
+                        intentScan.putExtra(Intents.Scan.CAMERA_ID, obj.optBoolean(Options.PREFER_FRONTCAMERA, false) ? 1 : 0);
 //                        intentScan.putExtra(Intents.Scan.SHOW_FLIP_CAMERA_BUTTON, obj.optBoolean(SHOW_FLIP_CAMERA_BUTTON, false));
 //                        intentScan.putExtra(Intents.Scan.SHOW_TORCH_BUTTON, obj.optBoolean(SHOW_TORCH_BUTTON, false));
-                        intentScan.putExtra(Intents.Scan.TORCH_ENABLED, obj.optBoolean(TORCH_ON, false));
+                        intentScan.putExtra(Intents.Scan.TORCH_ENABLED, obj.optBoolean(Options.TORCH_ON, false));
+                        intentScan.putExtra(Options.SHOW_LASER, obj.optBoolean(Options.SHOW_LASER, true));
 //                        intentScan.putExtra(Intents.Scan.SAVE_HISTORY, obj.optBoolean(SAVE_HISTORY, false));
-                        boolean beep = obj.optBoolean(DISABLE_BEEP, false);
-//                        intentScan.putExtra(Intents.Scan.BEEP_ON_SCAN, !beep);
+                        boolean beep = obj.optBoolean(Options.DISABLE_BEEP, false);
+                        intentScan.putExtra(Intents.Scan.BEEP_ENABLED, !beep);
 //                        if (obj.has(RESULTDISPLAY_DURATION)) {
 //                            intentScan.putExtra(Intents.Scan.RESULT_DISPLAY_DURATION_MS, "" + obj.optLong(RESULTDISPLAY_DURATION));
 //                        }
-                        if (obj.has(FORMATS)) {
-                            intentScan.putExtra(Intents.Scan.FORMATS, obj.optString(FORMATS));
+                        if (obj.has(Options.FORMATS)) {
+                            intentScan.putExtra(Intents.Scan.FORMATS, obj.optString(Options.FORMATS));
                         }
-                        if (obj.has(PROMPT)) {
-                            intentScan.putExtra(Intents.Scan.PROMPT_MESSAGE, obj.optString(PROMPT));
+                        if (obj.has(Options.PROMPT)) {
+                            intentScan.putExtra(Intents.Scan.PROMPT_MESSAGE, obj.optString(Options.PROMPT));
                         }
-                        if (obj.has(ORIENTATION)) {
-                            intentScan.putExtra(Intents.Scan.ORIENTATION_LOCKED, obj.optString(ORIENTATION));
+                        if (obj.has(Options.ORIENTATION)) {
+                            intentScan.putExtra(Intents.Scan.ORIENTATION_LOCKED, obj.optString(Options.ORIENTATION));
+                        }
+                        if(obj.has(Options.LASER_COLOR)){
+                            intentScan.putExtra(Options.LASER_COLOR, obj.optString(Options.LASER_COLOR));
+                        }
+                        if(obj.has(Options.BORDER_COLOR)){
+                            intentScan.putExtra(Options.BORDER_COLOR, obj.optString(Options.BORDER_COLOR));
+                        }
+                        if(obj.has(Options.BORDER_THICKNESS)){
+                            intentScan.putExtra(Options.BORDER_THICKNESS, obj.optInt(Options.BORDER_THICKNESS));
+                        }
+                        if(obj.has(Options.DIVIDE_DISTANCE)){
+                            intentScan.putExtra(Options.DIVIDE_DISTANCE, obj.optInt(Options.DIVIDE_DISTANCE));
+                        }
+                        if(obj.has(Options.BORDER_COLOR)){
+                            intentScan.putExtra(Options.BORDER_COLOR, obj.optString(Options.BORDER_COLOR));
+                        }
+                        if(obj.has(Options.FONT_SIZE)){
+                            intentScan.putExtra(Options.FONT_SIZE, obj.optInt(Options.FONT_SIZE));
+                        }
+                        if(obj.has(Options.FONT_COLOR)){
+                            int color;
+                            try{
+                                color = Color.parseColor(Options.FONT_COLOR);
+                            }
+                            catch (Exception e){
+                                color = Color.parseColor("#FFFFFF");
+                            }
+                            intentScan.putExtra(Options.FONT_COLOR, color);
                         }
                     }
 
@@ -230,9 +237,9 @@ public class BarcodeScanner extends CordovaPlugin {
             if (resultCode == Activity.RESULT_OK) {
                 JSONObject obj = new JSONObject();
                 try {
-                    obj.put(TEXT, intent.getStringExtra("SCAN_RESULT"));
-                    obj.put(FORMAT, intent.getStringExtra("SCAN_RESULT_FORMAT"));
-                    obj.put(CANCELLED, false);
+                    obj.put(Options.TEXT, intent.getStringExtra("SCAN_RESULT"));
+                    obj.put(Options.FORMAT, intent.getStringExtra("SCAN_RESULT_FORMAT"));
+                    obj.put(Options.CANCELLED, false);
                 } catch (JSONException e) {
                     Log.d(LOG_TAG, "This should never happen");
                 }
@@ -241,9 +248,9 @@ public class BarcodeScanner extends CordovaPlugin {
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 JSONObject obj = new JSONObject();
                 try {
-                    obj.put(TEXT, "");
-                    obj.put(FORMAT, "");
-                    obj.put(CANCELLED, true);
+                    obj.put(Options.TEXT, "");
+                    obj.put(Options.FORMAT, "");
+                    obj.put(Options.CANCELLED, true);
                 } catch (JSONException e) {
                     Log.d(LOG_TAG, "This should never happen");
                 }

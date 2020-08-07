@@ -29,6 +29,7 @@
     <source-file src="src/android/com/phonegap/plugins/barcodescanner/BarcodeScanner.java" target-dir="src/com/phonegap/plugins/barcodescanner"/>
     <source-file src="src/android/com/phonegap/plugins/barcodescanner/CustomScannerActivity.java" target-dir="src/com/phonegap/plugins/barcodescanner"/>
     <source-file src="src/android/com/phonegap/plugins/barcodescanner/CustomViewfinderView.java" target-dir="src/com/phonegap/plugins/barcodescanner"/>
+    <source-file src="src/android/com/phonegap/plugins/barcodescanner/Options.java" target-dir="src/com/phonegap/plugins/barcodescanner"/>
     <resource-file src="resources/res/layout/activity_custom_scanner.xml" target="res/layout/activity_custom_scanner.xml" />
     <resource-file src="resources/res/layout/custom_barcode_scanner.xml" target="res/layout/custom_barcode_scanner.xml" />
     <resource-file src="resources/res/values/strings.xml" target="res/values/strings.xml" />

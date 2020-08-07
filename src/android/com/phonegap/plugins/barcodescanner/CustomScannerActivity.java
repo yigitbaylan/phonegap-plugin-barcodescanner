@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 
+import com.google.zxing.client.android.Intents;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.ViewfinderView;
@@ -27,8 +29,8 @@ public class CustomScannerActivity extends Activity {
     private CaptureManager capture;
     private DecoratedBarcodeView barcodeScannerView;
     private Button switchFlashlightButton;
-    private ViewfinderView viewfinderView;
-    Textview placeholder;
+    private CustomViewfinderView viewfinderView;
+    TextView placeholder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +40,42 @@ public class CustomScannerActivity extends Activity {
         barcodeScannerView = findViewById(R.id.zxing_barcode_scanner);
 
         viewfinderView = findViewById(R.id.zxing_viewfinder_view);
+        placeholder = (TextView) findViewById(R.id.zxing_status_view);
 
         capture = new CaptureManager(this, barcodeScannerView);
         capture.initializeFromIntent(getIntent(), savedInstanceState);
         capture.decode();
 
+        changeMaskColor(null);
+        changeLaserVisibility(false);
         if(getIntent().hasExtra(Intents.Scan.PROMPT_MESSAGE)){
             placeholder.setText(getIntent().getStringExtra(Intents.Scan.PROMPT_MESSAGE));
         }
+        if(getIntent().hasExtra(Options.FONT_COLOR)){
+            placeholder.setTextColor(getIntent().getIntExtra(Options.FONT_COLOR, Color.parseColor("#FFFFFF")));
+        }
+        if(getIntent().hasExtra(Options.FONT_SIZE)){
+            placeholder.setTextSize(getIntent().getIntExtra(Options.FONT_SIZE, 24));
+        }
+        if(getIntent().hasExtra(Options.DIVIDE_DISTANCE)){
+            viewfinderView.setBorderThickness(getIntent().getIntExtra(Options.DIVIDE_DISTANCE, 4));
+        }
 
-        changeMaskColor(null);
-        changeLaserVisibility(false);
+        if(getIntent().hasExtra(Options.LASER_COLOR)){
+            viewfinderView.setLaserColor(getIntent().getStringExtra(Options.LASER_COLOR));
+        }
+        if(getIntent().hasExtra(Options.SHOW_LASER)){
+            viewfinderView.setLaserVisibility(getIntent().getBooleanExtra(Options.SHOW_LASER, true));
+        }
+        if(getIntent().hasExtra(Options.BORDER_COLOR)){
+            viewfinderView.setBorderColor(getIntent().getStringExtra(Options.BORDER_COLOR));
+        }
+        if(getIntent().hasExtra(Options.BORDER_THICKNESS)){
+            viewfinderView.setBorderThickness(getIntent().getIntExtra(Options.BORDER_THICKNESS, 15));
+        }
+        if(getIntent().hasExtra(Options.DIVIDE_DISTANCE)){
+            viewfinderView.setBorderThickness(getIntent().getIntExtra(Options.DIVIDE_DISTANCE, 4));
+        }
     }
 
     @Override
